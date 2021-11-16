@@ -1,14 +1,14 @@
 import cv2
 import numpy as np
+import time
 from time import gmtime, strftime
 puntos = []
 i = 0
 imgWarpColored = ""
-
+xy = []
 def buscarMarcas(frame):
 
   global puntos
-
   ######## PREPARAR MÁSCARAS PARA LA DETECCIÓN DE COLORES  ######
   frameHSV = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
   maskAmarillo = cv2.inRange(frameHSV,amarilloBajo,amarilloAlto)
@@ -19,64 +19,54 @@ def buscarMarcas(frame):
   maskRed = cv2.add(maskRed1,maskRed2)
   maskRed = cv2.add(maskRed1,maskRed2)
 
-  #Funcion para encontrar contornos del color de la máscara # 
-  contornos,hierachy = cv2.findContours(maskAmarillo, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
- 
-  for c in contornos:   
-    area = cv2.contourArea(c)
-    if area > 400:
-      M = cv2.moments(c)
-      if (M["m00"]==0): M["m00"]=1
-      x = int(M["m10"]/M["m00"])
-      y = int(M['m01']/M['m00'])
-      nuevoContorno = cv2.convexHull(c)
+  # Encuentra el amarillo y lo guarda
+  if len(puntos) ==0:
+    detectarColor(maskAmarillo,frame,0)
 
-      # Encuentra el amarillo y lo guarda
-      if len(puntos) ==0:
-        puntos.insert(0,(x,y))
-        print("amarillo",puntos)
+  # Una vez que esta el amarillo, busca el azul
+  if len(puntos)==1:
+    detectarColor(maskAzul,frame,1)
 
-      # Una vez que esta el amarillo, busca el azul
-      if len(puntos)==1:
-          dibujar(maskAzul,frame,1)
+  # Busca rojo    
+  if len(puntos)==2:
+    detectarColor(maskRed,frame,2)
 
-      # Busca rojo    
-      if len(puntos)==2:
-          dibujar(maskRed,frame,2)
+  # Buscar verde
+  if len(puntos)==3:
+    detectarColor(maskVerde,frame,3)
 
-      # Buscar verde
-      if len(puntos)==3:
-          dibujar(maskVerde,frame,3)
-
-      # Si ya tenemos los 4 puntos guardados 
-      if len(puntos) == 4:
-
+      # Si ya tenemos los 4 puntos guardados  
+  if len(puntos) == 4:
         # Hacemos una matriz con los puntos que detectamos
+       realizarPerspectiva(frame)
+      
+
+def realizarPerspectiva(frame):
+        global imgWarpColored
+        global puntos
         pts = np.array([[puntos[0]],[puntos[1]],[puntos[3]],[puntos[2]]], np.int32)
         pts = pts.reshape((-1,1,2))
         cv2.polylines(frame, [pts], True, (255,0,0))
         pts1 = np.float32(puntos) # PREPARAMOS PUNTOS PARA EL WARP #Imagen que detectamos
         pts2 = np.float32([[0, 0],[480, 0], [0, 640],[480, 640]]) # PREPARAMOS PUNTOS PARA EL WARP # los 4 bordes
         matrix = cv2.getPerspectiveTransform(pts1, pts2) # Realizamos la perspectiva
-
         imgWarpColored = cv2.warpPerspective(frame, matrix, (480, 640)) # Frame final rectificado
         imgWarpColored=imgWarpColored[20:imgWarpColored.shape[0] - 20, 20:imgWarpColored.shape[1] - 20]
-
         cv2.imshow("",imgWarpColored)
         if imgWarpColored.any():
           buscarObjeto(imgWarpColored)
 
 # Función para Buscar el objeto en la pantalla rectificada        
-
 def buscarObjeto(img):
 
         global puntos
+        global xy
         frameHSV2 = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
         redBajo1 = np.array([0,100,20],np.uint8)
         redAlto1 = np.array([5,255,255],np.uint8)
-
         redBajo2 = np.array([175,100,20],np.uint8)
         redAlto2 = np.array([179,255,255],np.uint8)
+        
         maskRed1 = cv2.inRange(frameHSV2,redBajo1,redAlto1)
         maskRed2 = cv2.inRange(frameHSV2,redBajo2,redAlto2)
         maskRed = cv2.add(maskRed1,maskRed2)
@@ -89,15 +79,17 @@ def buscarObjeto(img):
             if (M["m00"]==0): M["m00"]=1
             x = int(M["m10"]/M["m00"])
             y = int(M['m01']/M['m00'])
-            print("Puntos x,y: "+str((x,y)))
-            print(strftime("%M:%S", gmtime()))
-            newContour = cv2.convexHull(c)
-            cv2.circle(img,(x,y),7,(0,255,0),-1)
-            cv2.drawContours(img, [newContour], 0, (255,255,255), 3)
+            xy.append((x,y,strftime("%M:%S", gmtime())))
+            if len(xy) > 20:
+              xy.pop(0)
+        
 
-      
+def agarrarObjeto():
+  global xy
+  print(xy)
+# Funcion para encontrar contornos del color de la máscara # 
 #recibimos la máscara, y el id para  ubicarlo en el array
-def dibujar(mask,frame,id):  
+def detectarColor(mask,frame,id):  
   contornos,hierachy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
   for c in contornos:
     area = cv2.contourArea(c)
@@ -138,7 +130,6 @@ redAlto2 = np.array([179,255,255],np.uint8)
 
 ##############################################
 
-
 ### Empezar captura (webcam) ##
 cap = cv2.VideoCapture(0,cv2.CAP_DSHOW)
 while True:
@@ -147,9 +138,14 @@ while True:
     frame = cv2.resize(frame, (640, 480)) # RESIZE IMAGE
     buscarMarcas(frame)
     cv2.imshow('frame',frame)
-    if cv2.waitKey(1) & 0xFF == ord('s'):
+    k = cv2.waitKey(1)
+    if k & 0xFF == ord('s'):
       break
+    elif k == 32:
+      if imgWarpColored.any():
+          agarrarObjeto()
+        
 cap.release()
 cv2.destroyAllWindows()
-
+cv2.waitKey(1)
 

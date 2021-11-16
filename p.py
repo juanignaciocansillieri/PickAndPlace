@@ -6,7 +6,9 @@ def next_frame(nframe):
     nframe.tkraise()
 
 def run_fc():
-    os.system('python cam1.py')
+    
+    #os.system('python cam1.py')
+    os.system('python Perspectiva.py')
     #os.system('python3 Perspectiva.py')
 root = Tk()
 root.title("Pick&Place")

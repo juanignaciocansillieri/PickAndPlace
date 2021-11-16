@@ -29,7 +29,7 @@ def show_frame():
     window.after(10, show_frame) 
 
 display1 = tk.Label(imageFrame)
-display1.grid(row=1, column=0, padx=10, pady=2)  #Display 1
+display1.grid(row=0, column=1, padx=10, pady=2)  #Display 1
 display2 = tk.Label(imageFrame)
 display2.grid(row=0, column=0) #Display 2
 
