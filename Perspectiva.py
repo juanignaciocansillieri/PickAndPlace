@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import time
 from time import gmtime, strftime
+import datetime
 puntos = []
 i = 0
 imgWarpColored = ""
@@ -52,7 +53,7 @@ def realizarPerspectiva(frame):
         matrix = cv2.getPerspectiveTransform(pts1, pts2) # Realizamos la perspectiva
         imgWarpColored = cv2.warpPerspective(frame, matrix, (480, 640)) # Frame final rectificado
         imgWarpColored=imgWarpColored[20:imgWarpColored.shape[0] - 20, 20:imgWarpColored.shape[1] - 20]
-        cv2.imshow("",imgWarpColored)
+        cv2.imshow("",imgWarpColored) # Mostrar ventana rectificada
         if imgWarpColored.any():
           buscarObjeto(imgWarpColored)
 
@@ -79,7 +80,7 @@ def buscarObjeto(img):
             if (M["m00"]==0): M["m00"]=1
             x = int(M["m10"]/M["m00"])
             y = int(M['m01']/M['m00'])
-            xy.append((x,y,strftime("%M:%S", gmtime())))
+            xy.append((x,y,datetime.utcnow().strftime('%S.%f')[:-3]))
             if len(xy) > 20:
               xy.pop(0)
         
@@ -139,7 +140,7 @@ while True:
     buscarMarcas(frame)
     cv2.imshow('frame',frame)
     k = cv2.waitKey(1)
-    if k & 0xFF == ord('s'):
+    if k & 0xFF == ord('s'): 
       break
     elif k == 32:
       if imgWarpColored.any():
