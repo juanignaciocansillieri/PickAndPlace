@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
      * @param by
      * @return
  """
+
 def distanciaEntrePuntos(ax, ay, bx, by) :
         # Hipotenusa del triángulo rectángulo
         return math.hypot((bx - ax), (by - ay))
@@ -171,13 +172,14 @@ def transforma(m, px, py) :
         return q
     
 
-        """
+"""
             * Arma la matriz de desplazamiento 3x3
             *
             * @param despx
             * @param despy
             * @return
-        """
+"""
+
 def armaMatrizDesplazamiento(despx, despy) :
         m = np.array([[1,0,despx],[0,1,despy],[0,0,1]])
         """
@@ -253,6 +255,7 @@ def armaMatrizEscala(factor) :
 def productoMatricial3x3(mA, mB) :
 
         mP = np.dot(mA,mB)
+
         """
             aA = mA[0][0]
             bA = mA[0][1]
@@ -316,5 +319,6 @@ plt.plot([c1r[0], c1r[1]], [c2r[0], c2r[1]],color = 'black')
 plt.show()
 
 D = armaMatriz(123,135,263,246,254,237,532,342)
+
 print(D)
 
