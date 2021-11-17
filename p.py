@@ -56,7 +56,7 @@ TitleHead.place(x = 200, y=50)
 
 
 Button1 = Button(main_frame, text="Pick&Place", command = lambda: next_frame(pyp_frame))
-Button1.place(x = 590, y = 220)
+Button1.place(x = 590, y = 220,height=25,width=200)
 
 
 
