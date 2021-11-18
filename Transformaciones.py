@@ -290,21 +290,21 @@ def productoMatricial3x3(mA, mB) :
             mP[2][2] = gA * cB + hA * fB + iA * iB
         """
         return mP
-
+"""
 A=np.array([[1,2,3],[3,4,2],[5,6,1]]) 
 B=np.array([[1,2,3],[3,4,5],[1,2,3]])
 
-c1cx = 100
-c1cy = 250
+c1cx = 190
+c1cy = 310
 
-c2cx = 400
-c2cy = 260
+c2cx = 420
+c2cy = 120
 
-c1rx = 450
-c1ry = 420
+c1rx = 100
+c1ry = 250
 
-c2rx = 110
-c2ry = 160
+c2rx = 400
+c2ry = 260
 
 plt.plot([c1cx,c1cy],[c2cx,c2cy],color = 'green')
 plt.plot([c1rx,c1ry],[c2rx,c2ry],color = 'red')
@@ -317,8 +317,6 @@ c2r = transforma(m, c2cx, c2cy)
 plt.plot([c1r[0], c1r[1]], [c2r[0], c2r[1]],color = 'black')
 
 plt.show()
+"""
 
-D = armaMatriz(123,135,263,246,254,237,532,342)
-
-print(D)
 
