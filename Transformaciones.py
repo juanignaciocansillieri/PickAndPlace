@@ -125,7 +125,7 @@ def armaMatriz(ax, ay, bx,by, cx, cy, dx, dy):
         
         # Paso 4: con la matriz intermedia, despaza el origen
         desp = transforma(mRotEsc, ax, ay)
-        
+        print("desp",desp)
         despX = cx - desp[0]
         despY = cy - desp[1]
         
@@ -182,17 +182,6 @@ def transforma(m, px, py) :
 
 def armaMatrizDesplazamiento(despx, despy) :
         m = np.array([[1,0,despx],[0,1,despy],[0,0,1]])
-        """
-            m[0][0] = 1
-            m[0][1] = 0
-            m[0][2] = despx
-            m[1][0] = 0
-            m[1][1] = 1
-            m[1][2] = despy
-            m[2][0] = 0
-            m[2][1] = 0
-            m[2][2] = 1
-        """
         return m
     
 
@@ -205,19 +194,6 @@ def armaMatrizDesplazamiento(despx, despy) :
  """
 def armaMatrizRotacion(angulo) :
         m = np.array([[math.cos(angulo),-math.sin(angulo),0],[math.sin(angulo),math.cos(angulo),0],[0,0,1]])
-        """
-            m[0][0] = math.cos(angulo)
-            m[0][1] = -math.sin(angulo)
-            m[0][2] = 0
-
-            m[1][0] = -m[0][1] # math.sin(angulo)
-            m[1][1] = m[0][0] # math.cos(angulo)
-            m[1][2] = 0
-
-            m[2][0] = 0
-            m[2][1] = 0
-            m[2][2] = 1
-        """
         return m
     
 
@@ -229,19 +205,6 @@ def armaMatrizRotacion(angulo) :
  """
 def armaMatrizEscala(factor) :
         m = np.array([[factor,0,0],[0,factor,0],[0,0,1]])
-        """
-            m[0][0] = factor
-            m[0][1] = 0
-            m[0][2] = 0
-
-            m[1][0] = 0
-            m[1][1] = factor
-            m[1][2] = 0
-
-            m[2][0] = 0
-            m[2][1] = 0
-            m[2][2] = 1
-        """
         return m
     
 
@@ -255,68 +218,7 @@ def armaMatrizEscala(factor) :
 def productoMatricial3x3(mA, mB) :
 
         mP = np.dot(mA,mB)
-
-        """
-            aA = mA[0][0]
-            bA = mA[0][1]
-            cA = mA[0][2]
-        dA = mA[1][0]
-            eA = mA[1][1]
-            fA = mA[1][2]
-            gA = mA[2][0]
-            hA = mA[2][1]
-            iA = mA[2][2]
-
-            aB = mB[0][0]
-            bB = mB[0][1]
-            cB = mB[0][2]
-        dB = mB[1][0]
-            eB = mB[1][1]
-            fB = mB[1][2]
-            gB = mB[2][0]
-            hB = mB[2][1]
-            iB = mB[2][2]
-
-            mP = [3][3]
-
-            mP[0][0] = aA * aB + bA * dB + cA * gB
-            mP[0][1] = aA * bB + bA * eB + cA * hB
-            mP[0][2] = aA * cB + bA * fB + cA * iB
-            mP[1][0] = dA * aB + eA * dB + fA * gB
-            mP[1][1] = dA * bB + eA * eB + fA * hB
-            mP[1][2] = dA * cB + eA * fB + fA * iB
-            mP[2][0] = gA * aB + hA * dB + iA * gB
-            mP[2][1] = gA * bB + hA * eB + iA * hB
-            mP[2][2] = gA * cB + hA * fB + iA * iB
-        """
         return mP
-"""
-A=np.array([[1,2,3],[3,4,2],[5,6,1]]) 
-B=np.array([[1,2,3],[3,4,5],[1,2,3]])
 
-c1cx = 190
-c1cy = 310
-
-c2cx = 420
-c2cy = 120
-
-c1rx = 100
-c1ry = 250
-
-c2rx = 400
-c2ry = 260
-
-plt.plot([c1cx,c1cy],[c2cx,c2cy],color = 'green')
-plt.plot([c1rx,c1ry],[c2rx,c2ry],color = 'red')
-
-m = armaMatriz(c1cx, c1cy, c2cx, c2cy, c1rx, c1ry, c2rx, c2ry)
-
-c1r = transforma(m, c1cx, c1cy)
-c2r = transforma(m, c2cx, c2cy)
-
-plt.plot([c1r[0], c1r[1]], [c2r[0], c2r[1]],color = 'black')
-
-plt.show()
-"""
 
 
