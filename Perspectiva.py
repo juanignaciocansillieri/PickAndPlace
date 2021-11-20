@@ -7,7 +7,8 @@ import Transformaciones as t
 import FinalDobot as d
 
 """
-    * @author Cansillieri Juan Ignacio, Laboratorio de Robótica - 2021.
+    * @author Cansillieri Juan Ignacio, Laboratorio de Robótica - 2021.*
+    *Repositorio: https://github.com/juanignaciocansillieri/PickAndPlace.git*
 """
 
 ###############GLOBALES############
