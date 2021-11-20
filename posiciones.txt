@@ -1,0 +1,9 @@
+370
+18
+364
+324
+182
+-117
+186
+55
+*** ¡IMPORTANTE! ** EL ORDEN DEBE SER EL SIGUIENTE: c1cx,c1cy,c2cx,c2cy,c1rx,c1ry,c2rx,c2ry ***
