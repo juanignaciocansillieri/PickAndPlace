@@ -125,7 +125,6 @@ def armaMatriz(ax, ay, bx,by, cx, cy, dx, dy):
         
         # Paso 4: con la matriz intermedia, despaza el origen
         desp = transforma(mRotEsc, ax, ay)
-        print("desp",desp)
         despX = cx - desp[0]
         despY = cy - desp[1]
         

@@ -155,12 +155,12 @@ def buscarObjeto(frame):
             # Se guarda sólo las últimas 20 posiciones. *FIFO*
             if len(arrayPosicionesObjeto) > 13:
               arrayPosicionesObjeto.pop(0)
-              print(arrayPosicionesObjeto[12][1],arrayPosicionesObjeto[0][1])
-              distancia = abs(arrayPosicionesObjeto[12][1]) - abs(arrayPosicionesObjeto[0][1])
-              tiempo_recorrido = abs(arrayPosicionesObjeto[12][2]) - abs(arrayPosicionesObjeto[0][2])
-              velocidad = distancia/tiempo_recorrido
-              print(velocidad)
-              print(arrayPosicionesObjeto)
+
+              ## Cálculo de distancia y tiempo para calcular la velocidad # abs es valor absoluto
+              distancia = abs(arrayPosicionesObjeto[12][1]) - abs(arrayPosicionesObjeto[0][1]) # distancia entre la última y primera posición
+              tiempo_recorrido = abs(arrayPosicionesObjeto[12][2]) - abs(arrayPosicionesObjeto[0][2]) # idem pero con tiempo
+              velocidad = distancia/tiempo_recorrido 
+              
         
 
 """
@@ -169,33 +169,33 @@ def buscarObjeto(frame):
  """
  
 def agarrarObjeto():
-
+  
   global arrayPosicionesObjeto
   global matrizTransformacion
   global c1cx
   global velocidad
   global tiempo_recorrido
+
+  retardoRobot = 5950
   # (x,y) de la última posición encontrada antes de hacer click en SPACE
   x = arrayPosicionesObjeto[0][0]    
   y = arrayPosicionesObjeto[0][1]
-  print(x,y)
-  y2=(velocidad*5950)+y
+  #Cuando esta en movimiento, se predice su posición en y, ya que sólo esta varía.
+  # Se multiplica la velocidad por el retardo promedio del robot, desde que hacemos click hasta que agarra el objeto, y al resultado del producto
+  # se le suma la posición en la que estaba.
+  yfinal=(velocidad*retardoRobot)+y 
 
 
-  xyRobot = t.transforma(matrizTransformacion,x,y2) # Realizar transformación con los puntos x,y del objeto
-  print(xyRobot[0])
+  xyRobot = t.transforma(matrizTransformacion,x,yfinal) # Realizar transformación con los puntos x,y del objeto
     
 
 
   ### Se realizan ajustes a la presición x resultante de la transformación 
-  if c1rx - 10 <xyRobot[0]< c1rx+10 :
+  if c1rx - 10 <xyRobot[0]< c1rx+10 : # verifica el objeto está en las marcas iniciales
    xyRobot[0]= xyRobot[0]
   else:
     xyRobot[0] = c1rx * 2 - xyRobot[0] + 20
-  print(xyRobot)
-
   ## PASAMOS LAS COORDENADAS AL DOBOT PARA QUE AGARRE EL OBJETO.
-
   d.agarrarObjeto(xyRobot[0],xyRobot[1])
 
 
@@ -219,7 +219,6 @@ def detectarColor(mask,id):
       nuevoContorno = cv2.convexHull(c)
       if len(arrayPuntos) == id:  # ID: 0 - AMARILLO | 1 - AZUL | 2 - ROJO | 3 - VERDE 
         arrayPuntos.insert(id,(x,y)) # AGREGAMOS AL ARRAY EN LA POSICIÓN DEL ID, LA POSICIÓN X,Y
-        print(id,(x,y))
 
       
 
